@@ -26,24 +26,25 @@ jobs:
     - name: Install dependencies
       run: flutter pub get
 
-    - name: Create environment directory
-      run: mkdir -p environment
-
     - name: Decode Keystore
       run: |
-        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > environment/upload-keystore.jks
+        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > upload-keystore.jks
 
-    - name: Create key.properties
-      run: |
-        cat << EOF > environment/key.properties
-        storePassword=${{ secrets.KEYSTORE_PASSWORD }}
-        keyPassword=${{ secrets.KEYSTORE_PASSWORD }}
-        keyAlias=${{ secrets.KEY_ALIAS }}
-        storeFile=../../environment/upload-keystore.jks
-        EOF
-
-    - name: Build signed release APK
+    - name: Build release APK
       run: flutter build apk --release
+
+    - name: Sign APK with apksigner
+      run: |
+        # Find the Android build tools directory
+        BUILD_TOOLS_DIR=$(ls -d $ANDROID_HOME/build-tools/* | tail -1)
+        
+        # Sign the APK explicitly
+        $BUILD_TOOLS_DIR/apksigner sign \
+          --ks upload-keystore.jks \
+          --ks-key-alias ${{ secrets.KEY_ALIAS }} \
+          --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} \
+          --key-pass pass:${{ secrets.KEYSTORE_PASSWORD }} \
+          build/app/outputs/flutter-apk/app-release.apk
 
     - name: Upload release APK
       uses: actions/upload-artifact@v4
