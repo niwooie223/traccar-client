@@ -26,13 +26,16 @@ jobs:
     - name: Install dependencies
       run: flutter pub get
 
+    - name: Create environment directory
+      run: mkdir -p environment
+
     - name: Decode Keystore
       run: |
-        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/upload-keystore.jks
+        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > environment/upload-keystore.jks
 
     - name: Create key.properties
       run: |
-        cat << EOF > android/key.properties
+        cat << EOF > environment/key.properties
         storePassword=${{ secrets.KEYSTORE_PASSWORD }}
         keyPassword=${{ secrets.KEYSTORE_PASSWORD }}
         keyAlias=${{ secrets.KEY_ALIAS }}
