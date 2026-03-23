@@ -48,12 +48,12 @@ class Preferences {
     if (instance.getString(id) == null) {
   await instance.setString(id, (Random().nextInt(90000000) + 10000000).toString());
   // Update with your Azure server URL and port (default is usually 5055 for the new client)
-  await instance.setString(url, 'http://traccar.cclb-corps.org:5055' ); 
+  await instance.setString(url, 'http://traccar.cclb-corps.org:8082' ); 
   await instance.setString(accuracy, 'medium');
   await instance.setInt(interval, 300); // 5 minutes
   await instance.setInt(distance, 20);  // 20 meters
   await instance.setBool(buffer, true);
-  await instance.setBool(stopDetection, true);
+  await instance.setBool(stopDetection, false);
   await instance.setInt(fastestInterval, 30);
     }
   }
