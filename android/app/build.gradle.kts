@@ -18,7 +18,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.cclbcorps.gps"
+    namespace = "com.cclbcorps.fleet"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
